@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>顔認証ゲート（Web版）</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>顔認証ゲート（Web版）</h1>
+    <div class="status">
+      <span id="statusText">準備中…</span>
+      <span id="motionText">動き: -</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 左：カメラ＋操作＋ログ -->
+    <section class="panel">
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="overlay"></canvas>
+
+      <div class="controls">
+        <input id="nameInput" placeholder="登録名（例：user01）" />
+        <button id="registerBtn">登録（通常）</button>
+        <button id="registerMaskBtn">登録（マスク）</button>
+        <button id="clearBtn" class="danger">登録データを全削除</button>
+      </div>
+
+      <div class="controls">
+        <button id="armBtn">手動で認証開始（ARM）</button>
+        <button id="connectSerialBtn">Arduino接続（任意）</button>
+      </div>
+
+      <div class="hint">
+        <p>・人の動きを検知すると自動で認証モード（数秒）になります（1人ずつっぽい動き）</p>
+        <p>・Arduino接続は Chrome/Edge 系（Web Serial対応）でのみ動きます</p>
+        <p>・カメラは localhost（または https）で開いてください</p>
+      </div>
+
+      <!-- ログはpanelの中へ -->
+      <div class="logPanel">
+        <div class="logHeader">ログ</div>
+        <ul id="logList" class="logList"></ul>
+      </div>
+    </section>
+
+    <!-- 右：ゲート -->
+    <section class="gateWrap">
+      <div class="gate" id="gate">
+        <div class="bar"></div>
+        <div class="lamp" id="lamp"></div>
+        <div class="gateText" id="gateText">閉</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- モーダルはbodyの最後（mainの外） -->
+  <div id="aboutModal" class="modal" aria-hidden="true">
+    <div class="modalCard">
+      <h2 id="aboutTitle">この作品の説明</h2>
+      <p id="aboutUser" class="muted">認証した人：-</p>
+
+      <p class="big">
+        これは <b>顔認証</b> を使って、<b>ゲート（改札）</b> が開くデモです。<br>
+        認証していたら OPEN して、説明がでます。
+      </p>
+
+      <p class="muted" id="aboutCountdown"></p>
+
+      <div class="modalBtns">
+        <button id="aboutCloseBtn">とじる（ゲートにもどる）</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

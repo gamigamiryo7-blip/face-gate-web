@@ -1,0 +1,227 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #0b0f18;
+  color: #e8eefc;
+}
+
+header {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+h1 { font-size: 18px; margin: 0; }
+.status { display: flex; gap: 12px; font-size: 12px; opacity: .95; flex-wrap: wrap; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.panel {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 14px;
+  position: relative;
+}
+
+video {
+  width: 100%;
+  display: block;           /* ← 安定 */
+  border-radius: 12px;
+  background: #000;
+}
+
+#overlay {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: calc(100% - 28px);
+  height: auto;
+  pointer-events: none;
+  border-radius: 12px;
+  z-index: 2;               /* ← 安定 */
+}
+
+.controls { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.25);
+  color: #e8eefc;
+  outline: none;
+}
+
+button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: #e8eefc;
+  cursor: pointer;
+}
+
+button:hover { background: rgba(255,255,255,.10); }
+button.danger { border-color: rgba(255,80,80,.35); }
+
+.hint { margin: 12px 0 0; font-size: 12px; opacity: .85; line-height: 1.7; }
+
+.gateWrap { display: flex; align-items: center; justify-content: center; }
+
+.gate {
+  width: 280px;
+  height: 200px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bar {
+  width: 260px;
+  height: 16px;
+  background: rgba(255,255,255,.65);
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: rotate(0deg);
+  transition: transform .25s ease;
+}
+
+.lamp {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,80,80,.9);
+  box-shadow: 0 0 12px rgba(255,80,80,.45);
+  transition: .25s;
+}
+
+.gateText {
+  position: absolute;
+  bottom: 14px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  opacity: .95;
+}
+
+.gate.open .bar { transform: rotate(-55deg); }
+
+.gate.open .lamp {
+  background: rgba(80,255,150,.95);
+  box-shadow: 0 0 14px rgba(80,255,150,.55);
+}
+
+/* ===== ランプ点滅（ピッに合わせて） ===== */
+@keyframes lampBlink {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.lamp.blink {
+  animation: lampBlink 0.15s linear infinite;
+}
+
+/* ===== ログ表示 ===== */
+.logPanel {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+}
+
+.logHeader {
+  font-weight: 800;
+  letter-spacing: .08em;
+  font-size: 12px;
+  opacity: .9;
+  margin-bottom: 8px;
+}
+
+.logList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 180px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.logList li {
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  margin-bottom: 6px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.logTime { opacity: .75; min-width: 72px; }
+.logTag  { opacity: .9; font-weight: 700; min-width: 64px; }
+
+.logMsg  {
+  opacity: .95;
+  word-break: break-word;       /* ← はみ出し防止 */
+  overflow-wrap: anywhere;      /* ← はみ出し防止 */
+}
+
+/* ===== 説明モーダル ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.modal.show { display: flex; }
+
+.modalCard {
+  width: min(900px, 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(15,20,32,.92);
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+
+  max-height: calc(100vh - 32px);  /* ← はみ出し防止 */
+  overflow: auto;                  /* ← はみ出し防止 */
+}
+
+.modalCard h2 { margin: 0 0 8px; }
+.big { font-size: 18px; line-height: 1.9; }
+.muted { opacity: .8; }
+
+.modalBtns { margin-top: 12px; display: flex; gap: 10px; }
+
+/* ===== レスポンシブ（小さい画面では1列） ===== */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .gateWrap { justify-content: stretch; }
+  .gate { width: 100%; max-width: 420px; margin: 0 auto; }
+}
